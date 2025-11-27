@@ -1,5 +1,5 @@
 ﻿#include "EmptyApp.h"
-#include "../KMiniEngine/include/Assets/Components/Transform.h"
+#include "Assets/Components/Transform.h"
 #include "Scene/GameObject.h"
 
 void EmptyApp::Begin()

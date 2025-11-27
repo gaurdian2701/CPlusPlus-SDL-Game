@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 4.0)
 set(CMAKE_CXX_STANDARD 23)
-set(PROJECT_NAME EmptyApp)
+set(PROJECT_NAME SDLGame)
 project(${PROJECT_NAME})
 
-add_subdirectory(KMiniEngine)
+add_subdirectory(SDL-Engine)
 
 add_executable(
         ${PROJECT_NAME}
@@ -18,4 +18,4 @@ target_include_directories(
 target_link_libraries(
         ${PROJECT_NAME}
             PRIVATE
-                KMiniEngineLib)
+                SDLEngineLib)

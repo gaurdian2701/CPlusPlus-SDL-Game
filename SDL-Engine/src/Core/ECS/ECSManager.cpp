@@ -1,5 +1,5 @@
 ﻿#include "Core/ECS/ECSManager.h"
-#include "Core/ECS/Systems/MovementSystem.h"
+#include "Core/ECS/Systems/RenderingSystem.h"
 
 static Core::ECS::ECSManager* ECSManagerInstance = nullptr;
 
@@ -22,7 +22,7 @@ void Core::ECS::ECSManager::InitializeManager()
 
 void Core::ECS::ECSManager::InitializeSystems()
 {
-	m_SystemsList.push_back(new Systems::MovementSystem());
+	m_SystemsList.push_back(new Systems::RenderingSystem());
 	m_SystemsList[0]->BeginSystem();
 }
 

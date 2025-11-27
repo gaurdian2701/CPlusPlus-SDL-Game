@@ -1,10 +1,11 @@
 ﻿#pragma once
 #include <iostream>
-#include <glm/mat4x4.hpp>
-#include "glm/gtc/quaternion.hpp"
+#include <mat4x4.hpp>
+#include "gtc/quaternion.hpp"
+
 #define GLM_ENABLE_EXPERIMENTAL
-#include "glm/gtx/quaternion.hpp"
-#include "glm/ext/matrix_transform.hpp"
+#include "gtx/quaternion.hpp"
+#include "ext/matrix_transform.hpp"
 
 namespace Assets::Components
 {

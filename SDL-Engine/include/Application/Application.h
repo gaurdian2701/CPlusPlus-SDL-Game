@@ -2,6 +2,8 @@
 #include <vector>
 #include <memory>
 #include <concepts>
+#include "SDL3/SDL_video.h"
+
 
 namespace Core
 {
@@ -45,7 +47,9 @@ private:
 	void InitiateShutdown();
 
 protected:
-	static Application* ApplicationInstance;
+	static Application* m_applicationInstance;
+	SDL_Window* m_mainWindow = nullptr;
+	SDL_Surface* m_mainScreenSurface = nullptr;
 
 private:
 	std::vector<std::unique_ptr<Core::Layer>> LayerList;
