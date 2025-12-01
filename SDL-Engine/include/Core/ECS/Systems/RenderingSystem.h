@@ -17,8 +17,11 @@ namespace Core::ECS::Systems
 
     private:
         std::tuple<std::vector<Assets::Components::Transform>&,
-        std::vector<Assets::Components::Renderer2D>&> m_interestedComponents =
+        std::vector<Assets::Components::Renderer2D>&> m_interestedDenseComponentArrays =
             ECSManager::GetInstance()->QueryDenseComponentArrays<Assets::Components::Transform,
             Assets::Components::Renderer2D>();
+
+        std::tuple<std::vector<std::uint32_t>&, std::vector<std::uint32_t>&> m_interestedSparseArrays =
+            ECSManager::GetInstance()->QuerySparseEntityArrays<Assets::Components::Transform, Assets::Components::Renderer2D>();
     };
 }

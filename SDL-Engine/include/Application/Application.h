@@ -38,7 +38,12 @@ public:
 	template<std::derived_from<Core::Layer> T, typename ... LayerArguments>
 	void PushLayer(LayerArguments&& ... layerArguments)
 	{
-		LayerList.push_back(std::make_unique<T>(std::forward<LayerArguments>(layerArguments) ...));
+		m_layerList.push_back(std::make_unique<T>(std::forward<LayerArguments>(layerArguments) ...));
+	}
+
+	void SetBackgroundColor(const SDL_Color someColor)
+	{
+		m_backgroundColor = someColor;
 	}
 
 private:
@@ -46,15 +51,19 @@ private:
 	void AttachAllLayers() const;
 	void UpdateLayerList();
 	void DetachAllLayers();
-	void CloseGLFWWindow();
 	void InitiateShutdown();
+	void RefreshBackground();
+	void CheckForQuitEvent();
 
 protected:
 	SDL_Window* m_mainWindow = nullptr;
 	SDL_Renderer* m_mainRenderer = nullptr;
 
 private:
-	std::vector<std::unique_ptr<Core::Layer>> LayerList;
+	std::vector<std::unique_ptr<Core::Layer>> m_layerList;
+	SDL_Color m_backgroundColor = { 0, 0, 0, 255 };
+	bool m_isRunning = true;
+	SDL_Event m_mainEventCatcher;
 };
 
 Application& CreateApplication();

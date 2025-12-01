@@ -67,7 +67,7 @@ void Application::PushLayers()
 
 void Application::AttachAllLayers() const
 {
-    for (auto& layer : LayerList)
+    for (auto& layer : m_layerList)
     {
         layer->OnAttach();
     }
@@ -77,19 +77,20 @@ void Application::Run()
 {
     BeginApplication();
     auto lastFrameTime = std::chrono::high_resolution_clock::now();
-    SDL_SetRenderDrawColor(m_mainRenderer, 0, 0, 0,1);
 
-    while (true)
+    SDL_zero(m_mainEventCatcher);
+
+    while (m_isRunning)
     {
+        CheckForQuitEvent();
+
         auto currentFrameTime = std::chrono::high_resolution_clock::now();
         std::chrono::duration<float> deltaTime = currentFrameTime - lastFrameTime;
         lastFrameTime = currentFrameTime;
 
-        SDL_SetRenderDrawColor(m_mainRenderer, 0, 0, 0, 255);
-        SDL_RenderClear(m_mainRenderer);
+        RefreshBackground();
 
         UpdateApplication(deltaTime.count());
-
         UpdateLayerList();
 
         SDL_RenderPresent(m_mainRenderer);
@@ -99,9 +100,26 @@ void Application::Run()
     InitiateShutdown();
 }
 
+void Application::CheckForQuitEvent()
+{
+    while (SDL_PollEvent(&m_mainEventCatcher))
+    {
+        if (m_mainEventCatcher.type == SDL_EVENT_QUIT)
+        {
+            m_isRunning = false;
+        }
+    }
+}
+
+void Application::RefreshBackground()
+{
+    SDL_SetRenderDrawColor(m_mainRenderer, m_backgroundColor.r, m_backgroundColor.g, m_backgroundColor.b, m_backgroundColor.a);
+    SDL_RenderClear(m_mainRenderer);
+}
+
 void Application::UpdateLayerList()
 {
-    for (auto& layer : LayerList)
+    for (auto& layer : m_layerList)
     {
         layer->Update();
         layer->Render();
@@ -111,7 +129,7 @@ void Application::UpdateLayerList()
 
 std::vector<std::unique_ptr<Core::Layer>>& Application::GetLayerList()
 {
-    return LayerList;
+    return m_layerList;
 }
 
 SDL_Window* Application::GetMainWindow() const
@@ -126,21 +144,16 @@ SDL_Renderer* Application::GetMainRenderer() const
 
 void Application::DetachAllLayers()
 {
-    for (uint8_t i = 0; i < LayerList.size(); i++)
+    for (uint8_t i = 0; i < m_layerList.size(); i++)
     {
-        if (LayerList[i] != nullptr)
+        if (m_layerList[i] != nullptr)
         {
-            LayerList[i]->OnDetach();
+            m_layerList[i]->OnDetach();
         }
     }
-}
-
-void Application::CloseGLFWWindow()
-{
 }
 
 void Application::InitiateShutdown()
 {
     DetachAllLayers();
-    CloseGLFWWindow();
 }

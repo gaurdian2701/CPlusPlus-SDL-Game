@@ -9,7 +9,7 @@ namespace Assets::Components
         Renderer2D() = default;
 
         template<int ArraySize>
-        Renderer2D(glm::vec3&& someColor)
+        explicit Renderer2D(glm::vec<4, int>&& someColor)
         {
             Color = someColor;
         }
@@ -37,6 +37,6 @@ namespace Assets::Components
             Color = other.Color;
         }
 
-        glm::vec3 Color = glm::vec3(1.0f, 0.0f, 0.0f);
+        glm::vec<4, int> Color = glm::vec<4, int>(255, 255, 255, 255);
     };
 }

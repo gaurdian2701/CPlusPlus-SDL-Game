@@ -12,15 +12,21 @@ void Core::ECS::Systems::RenderingSystem::BeginSystem()
 
 void Core::ECS::Systems::RenderingSystem::UpdateSystem()
 {
-	auto& entities = ECSManager::GetInstance()->GetSmallestEntityArray<Assets::Components::Transform>();
+	const auto& entities = ECSManager::GetInstance()->GetSmallestDenseEntityArray<Assets::Components::Transform,
+	Assets::Components::Renderer2D>();
+	const auto& [denseTransformArray, denseRenderer2DArray] = m_interestedDenseComponentArrays;
+	const auto& [sparseTransformArray, sparseRenderer2DArray] = m_interestedSparseArrays;
 
-	for (auto& entity : entities)
+	for (const auto& entityID : entities)
 	{
-		auto& [transformComponentArray, renderer2DArray] = m_interestedComponents;
+		const Assets::Components::Transform& transform = denseTransformArray[sparseTransformArray[entityID]];
+		const Assets::Components::Renderer2D& renderer2D = denseRenderer2DArray[sparseRenderer2DArray[entityID]];
+
 		SDL_SetRenderDrawColor(Application::GetInstance()->GetMainRenderer(),
-			255, 0, 0, 255);
-		SDL_RenderPoint(Application::GetInstance()->GetMainRenderer(), transformComponentArray[entity].PositionVector.x,
-			transformComponentArray[entity].PositionVector.y);
+			renderer2D.Color.r, renderer2D.Color.g, renderer2D.Color.b, renderer2D.Color.a);
+
+		SDL_RenderPoint(Application::GetInstance()->GetMainRenderer(),
+			transform.PositionVector.x, transform.PositionVector.y);
 	}
 }
 

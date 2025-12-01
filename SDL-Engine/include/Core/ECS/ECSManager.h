@@ -57,19 +57,19 @@ namespace Core::ECS
             return GetComponentPool<T>()->GetDenseComponentArray()[someEntityID];
         }
 
-        template<typename FirstComponentType, typename ... ComponentType>
-        std::vector<std::uint32_t>& GetSmallestEntityArray()
+        template<typename FirstComponentType, typename ... OtherComponentTypes>
+        std::vector<std::uint32_t>& GetSmallestDenseEntityArray()
         {
             std::uint32_t smallestEntityArraySize = UINT32_MAX;
             std::type_index smallestEntityArrayTypeIndex = typeid(FirstComponentType);
             std::vector<std::uint32_t>* smallestEntityArray = &m_componentPoolMap[smallestEntityArrayTypeIndex]->GetDenseEntityArray();
             ([&]
             {
-                auto& denseEntityArray = m_componentPoolMap[std::type_index(typeid(ComponentType))]->GetDenseEntityArray();
-                if (int denseEntityArraySize = denseEntityArray.size(); denseEntityArraySize < smallestEntityArraySize)
+                auto& denseEntityArray = m_componentPoolMap[std::type_index(typeid(OtherComponentTypes))]->GetDenseEntityArray();
+                if (const int denseEntityArraySize = denseEntityArray.size(); denseEntityArraySize < smallestEntityArraySize && denseEntityArraySize > 0)
                 {
                     smallestEntityArraySize = denseEntityArraySize;
-                    smallestEntityArrayTypeIndex = typeid(ComponentType);
+                    smallestEntityArrayTypeIndex = typeid(OtherComponentTypes);
                     smallestEntityArray = &denseEntityArray;
                 }
             }(), ...);
@@ -77,12 +77,20 @@ namespace Core::ECS
             return *smallestEntityArray;
         }
 
-        template<typename FirstComponentType, typename ... ComponentTypes>
-        std::tuple<std::vector<FirstComponentType>&, std::vector<ComponentTypes>& ...> QueryDenseComponentArrays()
+        template<typename FirstComponentType, typename ... OtherComponentTypes>
+        std::tuple<std::vector<FirstComponentType>&, std::vector<OtherComponentTypes>& ...> QueryDenseComponentArrays()
         {
             return std::forward_as_tuple(
                 GetComponentPool<FirstComponentType>()->GetDenseComponentArray(),
-                GetComponentPool<ComponentTypes>()->GetDenseComponentArray() ...);
+                GetComponentPool<OtherComponentTypes>()->GetDenseComponentArray() ...);
+        }
+
+        template<typename FirstComponentType, typename ... OtherComponentTypes>
+        auto QuerySparseEntityArrays()
+        {
+            return std::forward_as_tuple(
+                GetComponentPool<FirstComponentType>()->GetSparseEntityArray(),
+                GetComponentPool<OtherComponentTypes>()->GetSparseEntityArray() ...);
         }
 
         static std::size_t GenerateIndex()
