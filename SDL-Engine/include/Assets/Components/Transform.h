@@ -52,65 +52,18 @@ namespace Assets::Components
         glm::mat4 GetModelMatrix()
         {
             glm::mat4 translationMatrix = glm::mat4(1.0f);
-            translationMatrix = glm::translate(translationMatrix, glm::vec3(PositionVector.x, PositionVector.y, PositionVector.z));
             glm::mat4 rotationMatrix = glm::mat4(1.0f);
-            rotationMatrix = glm::toMat4(glm::quat(glm::vec3(RotationVector.x, RotationVector.y, RotationVector.z)));
             glm::mat4 scaleMatrix = glm::mat4(1.0f);
+
+            translationMatrix = glm::translate(translationMatrix, glm::vec3(PositionVector.x, PositionVector.y, PositionVector.z));
+            rotationMatrix = glm::toMat4(glm::quat(glm::vec3(RotationVector.x, RotationVector.y, RotationVector.z)));
             scaleMatrix = glm::scale(scaleMatrix, glm::vec3(ScaleVector.x, ScaleVector.y, ScaleVector.z));
 
             return translationMatrix * rotationMatrix * scaleMatrix;
         }
 
-        struct Position
-        {
-            Position& operator=(const Position& other)
-            {
-                x = other.x;
-                y = other.y;
-                z = other.z;
-
-                return *this;
-            }
-
-            float x = 0.0f;
-            float y = 0.0f;
-            float z = 0.0f;
-        };
-
-        struct Rotation
-        {
-            Rotation& operator=(const Rotation& other)
-            {
-                x = other.x;
-                y = other.y;
-                z = other.z;
-
-                return *this;
-            }
-
-            float x = 0.0f;
-            float y = 0.0f;
-            float z = 0.0f;
-        };
-
-        struct Scale
-        {
-            Scale&  operator=(const Scale& other)
-            {
-                x = other.x;
-                y = other.y;
-                z = other.z;
-
-                return *this;
-            }
-
-            float x = 1.0f;
-            float y = 1.0f;
-            float z = 1.0f;
-        };
-
-        Position PositionVector;
-        Rotation RotationVector;
-        Scale ScaleVector;
+        glm::vec3 PositionVector = glm::vec3(0.0f);
+        glm::vec3 RotationVector = glm::vec3(0.0f);
+        glm::vec3 ScaleVector = glm::vec3(1.0f);
     };
 }

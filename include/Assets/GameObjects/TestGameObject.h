@@ -14,7 +14,9 @@ namespace Assets::GameObjects
 		void EvaluateMovementInput();
 
 	private:
-		float m_moveSpeed = 50;
+		float m_moveSpeed = 50.0f;
+		float m_rotationSpeed = 1.0f;
+		float m_rotationValue = 0.0f;
 		glm::vec<2, int> m_movementVector = glm::vec<2, int>(0);
 	};
 }

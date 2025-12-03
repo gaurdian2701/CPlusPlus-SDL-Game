@@ -1,6 +1,5 @@
 ﻿#pragma once
-#include "vec3.hpp"
-#include "SDL3/SDL_rect.h"
+#include "SDL3/SDL_render.h"
 
 namespace Assets::Components
 {
@@ -9,10 +8,16 @@ namespace Assets::Components
         //Default Constructor
         Renderer2D() = default;
 
-        template<int ArraySize>
-        explicit Renderer2D(glm::vec<4, int>&& someColor)
+        void Initialize(const int VertexArraySize, const SDL_FColor someColor)
         {
+            vertexDataArraySize = VertexArraySize;
+            vertexDataArray = new SDL_Vertex[VertexArraySize];
             Color = someColor;
+
+            for (int i = 0; i < VertexArraySize; i++)
+            {
+                vertexDataArray[i].color = someColor;
+            }
         }
 
         //Move Constructor
@@ -38,7 +43,8 @@ namespace Assets::Components
             Color = other.Color;
         }
 
-        glm::vec<4, int> Color = glm::vec<4, int>(255, 255, 255, 255);
-        SDL_FRect RenderRectangle = SDL_FRect(0, 0, 10, 10);
+        SDL_FColor Color = SDL_FColor(255, 255, 255, 255);
+        SDL_Vertex* vertexDataArray = nullptr;
+        int vertexDataArraySize = 0;
     };
 }

@@ -22,16 +22,15 @@ void Core::ECS::Systems::RenderingSystem::UpdateSystem()
 		Assets::Components::Transform& transform = denseTransformArray[sparseTransformArray[entityID]];
 		Assets::Components::Renderer2D& renderer2D = denseRenderer2DArray[sparseRenderer2DArray[entityID]];
 
-		const glm::vec3 rectPos = transform.GetModelMatrix() *
-			glm::vec4(transform.PositionVector.x, transform.PositionVector.y, 0, 0);
-
-		renderer2D.RenderRectangle.x = rectPos.x;
-		renderer2D.RenderRectangle.y = rectPos.y;
-
 		SDL_SetRenderDrawColor(Application::GetInstance()->GetMainRenderer(),
 			renderer2D.Color.r, renderer2D.Color.g, renderer2D.Color.b, renderer2D.Color.a);
 
-		SDL_RenderRect(Application::GetInstance()->GetMainRenderer(), &renderer2D.RenderRectangle);
+		SDL_RenderGeometry(Application::GetInstance()->GetMainRenderer(),
+			nullptr,
+			renderer2D.vertexDataArray,
+			renderer2D.vertexDataArraySize,
+			nullptr,
+			0);
 	}
 }
 
